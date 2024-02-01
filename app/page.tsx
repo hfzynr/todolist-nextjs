@@ -2,14 +2,14 @@
 
 import React, {useState} from 'react';
 
-import { TodoObject } from '@/lib/Todo';
+import { Todo } from '@/lib/types';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 const Home: React.FC = () => {
     const [task, setTask] = useState<string>('');
-    const [list, setList] = useState<TodoObject[]>([]);
+    const [list, setList] = useState<Todo[]>([]);
   
     const addTask = () => {
       const rowNumber = [...list]
