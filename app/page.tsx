@@ -76,7 +76,7 @@ const Home: React.FC = () => {
                   className='mx-1 my-1'
                   onClick={() => markToDone(listObj.id)}
                   >
-                    {`${listObj.done ? '↺' : '✓'}`}
+                    {`${listObj.done ? 'Undo' : 'Done'}`}
                 </Button>
               </li>
             ))
