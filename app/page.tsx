@@ -37,6 +37,10 @@ const Home: React.FC = () => {
       }
     }
 
+    const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if(event.key === 'Enter') addTask()
+    }
+
   return (
     <main className='flex flex-col items-center justify-between p-24'>
       <div className='flex flex-row justify-center items-center'>
@@ -44,7 +48,8 @@ const Home: React.FC = () => {
           className='mx-2 my-4'
           placeholder='Input Task Here'
           value={task}
-          onChange={(e) => setTask(e.target.value)}>
+          onChange={(e) => setTask(e.target.value)}
+          onKeyDown={(e) => handleEnter(e)}>
         </Input>
         <Button 
           className='mx-2 my-4' 
