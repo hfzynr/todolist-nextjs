@@ -2,15 +2,14 @@
 
 import React, {useState} from 'react';
 
+import { TodoObject } from '@/lib/Todo';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-import { TodoObject } from '@/app/models/Todo';
 
 const Home: React.FC = () => {
     const [task, setTask] = useState<string>('');
     const [list, setList] = useState<TodoObject[]>([]);
-    const [edit, setEdit] = useState<string>('');
   
     const addTask = () => {
       const rowNumber = [...list]
@@ -28,8 +27,14 @@ const Home: React.FC = () => {
       })
     }
   
-    const editTask = (id: number, newValue: string) => {
-      setList(list.map((listObj => listObj.id === id ? {...listObj, value: newValue, edit: !listObj.edit} : listObj)))
+    const editTask = (id: number) => {
+      const newValue = prompt('edit todo: ');
+      if ( newValue == ''){
+        alert('Task Cannot be empty!')
+      } else if(newValue != null){
+        setList(list.map((listObj => listObj.id === id ? {...listObj, value: newValue, edit: !listObj.edit} : listObj)))
+        setTask('')
+      }
     }
 
   return (
@@ -47,25 +52,19 @@ const Home: React.FC = () => {
             Add Task
         </Button>
       </div>
-      <div className='flex flex-col'>
-        <ul id ='listTask'>
+        <ul className =''>
           {
             list.map((listObj) => (
               <li 
                 className={`${listObj.done ? 'line-through' : ''}`}
                 key={listObj.id}
                 >
-                  {listObj.edit ? 
-                  (<Input 
-                    placeholder={listObj.value}
-                    onChange={(e) => setEdit(e.target.value)}
-                    />) : 
-                  (<span>{listObj.value}</span>)}
+                {listObj.value}
                 <Button 
                   className='mx-1 my-1'
-                  onClick={() => editTask(listObj.id,edit)}
+                  onClick={() => editTask(listObj.id)}
                   >
-                    {`${listObj.edit ? '✓' : '✎'}`}
+                    Edit
                 </Button>
                 <Button 
                   className='mx-1 my-1'
@@ -83,7 +82,6 @@ const Home: React.FC = () => {
             ))
           }
         </ul>
-      </div>
     </main>
   );
 }
