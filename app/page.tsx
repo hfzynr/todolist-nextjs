@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCheck, Edit, Trash2, Undo2 } from 'lucide-react';
+import {Check ,CheckCheck, Edit, Trash2, Undo2 } from 'lucide-react';
 import React, { useState } from 'react';
 
 import { Todo } from '@/lib/types';
@@ -12,8 +12,10 @@ import { Input } from '@/components/ui/input';
 const HomePage = (): JSX.Element => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [editValue, setEditValue] = useState('');
 
   const addTask = () => {
+    if(inputValue == '') return alert('Please input Task!')
     const rowNumber = [...todos];
 
     setTodos([
@@ -40,19 +42,25 @@ const HomePage = (): JSX.Element => {
   };
 
   const editTask = (id: number) => {
-    const newValue = prompt('edit todo: ');
-    if (newValue == '') {
-      alert('Task Cannot be empty!');
-    } else if (newValue != null) {
-      setTodos(
-        todos.map((prevTodos) =>
-          prevTodos.id === id
-            ? { ...prevTodos, value: newValue, edit: !prevTodos.edit }
-            : prevTodos
-        )
-      );
-      setInputValue('');
-    }
+    if(editValue == '') return alert('Please input Edit Task!')
+    setTodos(
+      todos.map((prevTodos) =>
+        prevTodos.id === id
+          ? { ...prevTodos, value:editValue, edit: !prevTodos.edit }
+          : prevTodos
+      )
+    );
+    setEditValue('');
+  };
+
+  const handleEdit = (id: number) => {
+    setTodos(
+      todos.map((prevTodos) =>
+        prevTodos.id === id
+          ? { ...prevTodos, value:editValue, edit: !prevTodos.edit }
+          : prevTodos
+      )
+    );
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,6 +71,10 @@ const HomePage = (): JSX.Element => {
     if (event.key === 'Enter') {
       addTask();
     }
+  };
+
+  const handleInputChangeEdit = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditValue(event.target.value);
   };
 
   return (
@@ -89,7 +101,12 @@ const HomePage = (): JSX.Element => {
                 prevTodos.done ? 'line-through' : ''
               )}
             >
-              {prevTodos.value}
+              {prevTodos.edit ? 
+              <Input 
+                placeholder='Edit Here'
+                value={editValue} 
+                onChange={handleInputChangeEdit}
+                /> : prevTodos.value}
             </p>
 
             <div className='flex  gap-1'>
@@ -110,10 +127,22 @@ const HomePage = (): JSX.Element => {
                 )}
               </Button>
 
-              <Button className='gap-1' onClick={() => editTask(prevTodos.id)}>
-                <Edit size={16} />
-                Edit
-              </Button>
+              {prevTodos.edit ? ( 
+                  <Button 
+                    className='gap-1' 
+                    onClick={() => editTask(prevTodos.id)}
+                    >
+                      <Check size={16} /> Edit
+                    </Button>
+                  ) : (
+                  <Button 
+                    className='gap-1' 
+                    onClick={() => handleEdit(prevTodos.id)}
+                    >
+                      <Edit size={16} /> Edit
+                  </Button>
+                )
+              }
 
               <Button
                 onClick={() => removeTask(prevTodos.id)}
